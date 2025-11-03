@@ -12,7 +12,7 @@ Este estilo consiste en cuatro capas: Presentation, Business, Persistence y Data
 Data Layer lo proveera Supabase.
 
 Inicialmente se ideó la siguiente estructura de carpetas
-``` js
+``` cs
 src/
 ├── Presentation/
 │   ├── pages
