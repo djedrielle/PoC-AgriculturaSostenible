@@ -1,10 +1,12 @@
 # Documentación del PoC - Agricultura Sostenible
 
-FrontEnd en Azure Static Web Apps.
+FrontEnd desplegado en Azure Static Web Apps.
+
 BackEnd en Supabase.
 
-Se eligió el estilo Layered Architecture porque nos permite aislar las funcionalidades técnicas de la plataforma en diferentes capas, facilitando así el matenimiento de esta, ya sea cambiar de base de datos o framework... etc.
+Durante el desarrollo de esta plataforma se seguirá una estructura arquitectónica monolothic con el estilo Layered Architecture porque nos permite aislar las funcionalidades técnicas de la plataforma en diferentes capas, facilitando así el matenimiento de esta, ya sea cambiar de base de datos o framework... etc.
+También permite el escalado vertical para futuras versiones de esta PoC o incluso un deployment completo.
 
-Este estilo consiste en cuatro capas: Presentación UX, Business, Persistencia y Data Layer.
+Este estilo consiste en cuatro capas: Presentation, Business, Persistence y Data Layer.
 
 Data Layer lo proveera Supabase.
