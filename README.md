@@ -10,3 +10,21 @@ También permite el escalado vertical para futuras versiones de esta PoC o inclu
 Este estilo consiste en cuatro capas: Presentation, Business, Persistence y Data Layer.
 
 Data Layer lo proveera Supabase.
+
+Inicialmente se ideó la siguiente estructura de carpetas
+``` js
+src/
+├── Presentation/
+│   ├── pages
+│   ├── components
+│   └── ...
+├── Business/
+│   ├── Models
+│   ├── BusinessInterfaces
+│   ├── Implements
+│   └── ...
+└── Persistence/
+    ├── clients
+    ├── cache
+    └── ...
+```
