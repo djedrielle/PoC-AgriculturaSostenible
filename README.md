@@ -14,7 +14,7 @@ Data Layer lo proveera Supabase.
 Inicialmente se ideó la siguiente estructura de carpetas
 ``` cs
 src/
-├── Presentation/
+├── Presentation-AS-PoC/
 │   ├── pages
 │   ├── components
 │   └── ...
@@ -29,4 +29,4 @@ src/
     └── ...
 ```
 
-fix
+El desarrollo del backend se hará localmente con contenedores Docker, luego este será desplegado en Azure Web App para su integración con el FrontEnd de SWA.
