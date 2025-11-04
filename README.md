@@ -15,18 +15,30 @@ Inicialmente se ideó la siguiente estructura de carpetas
 ``` cs
 src/
 ├── Presentation-AS-PoC/
-│   ├── pages
-│   ├── components
-│   └── ...
-├── Business/
-│   ├── Models
-│   ├── BusinessInterfaces
-│   ├── Implements
-│   └── ...
-└── Persistence/
-    ├── clients
-    ├── cache
-    └── ...
+│   ├── src/
+│   │   ├── pages
+│   │   ├── components
+│   │   ├── App.tsx
+│   │   └── ...
+│   └── some Vite stuff...
+└── Backend/
+    ├── Dockerfile
+    ├── docker-compose.yml
+    ├── tsconfig.json
+    └── src/
+        ├── index.ts
+        ├── Business/
+        │   ├── Routes
+        │   ├── Models
+        │   ├── BusinessInterfaces
+        │   ├── Implements
+        │   └── ...
+        └── Persistence/
+            ├── clients/
+            │   ├── remoteSupabaseClient.ts
+            │   ├── localSupabaseClient.ts
+            │   └── cacheClient.ts
+            └── ...
 ```
 
 El desarrollo del backend se hará localmente con contenedores Docker, luego este será desplegado en Azure Web App para su integración con el FrontEnd de SWA.
