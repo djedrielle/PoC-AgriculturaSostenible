@@ -1,6 +1,8 @@
 import express from 'express';
 //import { connectDB } from './Persistence/clients/db';
-import { router as businessRoutes } from './Business/routes';
+import { router as userRoutes } from './Business/Routes/userRoutes';
+import { router as tokenizeRoutes } from './Business/Routes/tokenRoutes';
+import { router as analyticsRoutes } from './Business/Routes/analyticsRoutes';
 
 const app = express();
 
@@ -8,7 +10,9 @@ const app = express();
 app.use(express.json());
 
 // Rutas del negocio
-app.use('/api', businessRoutes);
+app.use('/user', userRoutes);
+app.use('/tokenize', tokenizeRoutes);
+app.use('/analytics', analyticsRoutes);
 
 // Iniciar conexión a la base de datos
 //connectDB();

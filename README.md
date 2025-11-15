@@ -42,3 +42,5 @@ src/
 ```
 
 El desarrollo del backend se hará localmente con contenedores Docker, luego este será desplegado en Azure Web App para su integración con el FrontEnd de SWA.
+
+Se aplicó Factory Method en la creación de los tokens (tokens.ts) y usuarios (users.ts). Esto para permitir la adición de otros tipos de tokens en el futuro. Ejemplo: Piña Token, BananoToken... etc.
