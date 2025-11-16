@@ -1,39 +1,28 @@
-import { User } from "../Models/User";
+import { UserRepositoryPostgres } from "../../Persistence/Repos/userRepository";
+import { User, Farmer, Investor } from "../Models/user";
+
 
 export class UserService {
-    private users: User[] = [];
-    private nextId: number = 1;
 
-    create(userData: Omit<User, "id">): User {
-        const user: User = {
-            id: this.nextId++,
-            ...userData,
-        };
-        this.users.push(user);
-        return user;
+    userRepository = new UserRepositoryPostgres();
+    
+    async createUser(user: User): Promise<void> {
+        this.userRepository.createUser(user);
     }
 
-    getById(id: number): User | undefined {
-        return this.users.find((user) => user.id === id);
+    async createFarmer(farmer: Farmer): Promise<void> {
+        this.userRepository.createFarmer(farmer);
     }
 
-    getAll(): User[] {
-        return this.users;
+    async createInvestor(investor: Investor): Promise<void> {
+        this.userRepository.createInvestor(investor);
     }
 
-    update(id: number, userData: Partial<Omit<User, "id">>): User | undefined {
-        const user = this.getById(id);
-        if (!user) return undefined;
-
-        Object.assign(user, userData);
-        return user;
+    async getUserInfo(): Promise<any> {
+        return this.userRepository.getUserInfo();
     }
 
-    delete(id: number): boolean {
-        const index = this.users.findIndex((user) => user.id === id);
-        if (index === -1) return false;
-
-        this.users.splice(index, 1);
-        return true;
+    async deleteUser(userId: string): Promise<void> {
+        this.userRepository.deleteUser(userId);
     }
 }

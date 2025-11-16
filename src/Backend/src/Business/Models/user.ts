@@ -4,22 +4,21 @@ export interface UserProps {
     user_type: 'farmer' | 'investor';
     email: string;
     wallet_address: string;
-    full_name: string;
+    first_name: string;
+    last_name: string;
     registration_date: string;
     active: boolean;
+    identification_number: string;
 }
 
-export interface FarmerProps extends UserProps {
+export interface FarmerProps {
     farmer_id: string;
-    location?: string;
-    identification_type?: string;
-    identification_number?: string;
-    production_history?: any[];
+    user_id: string;
 }
 
-export interface InvestorProps extends UserProps {
+export interface InvestorProps{
     investor_id: string;
-    capital_on_platform?: number;
+    user_id: string;
 }
 
 export class User {
@@ -28,9 +27,11 @@ export class User {
     user_type: 'farmer' | 'investor';
     email: string;
     wallet_address: string;
-    full_name: string;
+    first_name: string;
+    last_name: string;
     registration_date: string;
     active: boolean;
+    identification_number: string;
 
     constructor(init?: Partial<UserProps>) {
         // Provide minimal defaults to keep instance shape predictable
@@ -39,51 +40,36 @@ export class User {
         this.user_type = 'farmer';
         this.email = '';
         this.wallet_address = '';
-        this.full_name = '';
+        this.first_name = '';
+        this.last_name = '';
         this.registration_date = new Date().toISOString();
         this.active = true;
+        this.identification_number = '';
 
         if (init) Object.assign(this, init);
     }
 }
 
-export class Farmer extends User {
+export class Farmer {
     farmer_id: string;
-    location?: string;
-    identification_type?: string;
-    identification_number?: string;
-    production_history?: any[];
+    user_id: string;
 
     constructor(init?: Partial<FarmerProps>) {
-        super(init);
         this.farmer_id = '';
+        this.user_id = '';
+
         if (init) Object.assign(this, init);
-        this.user_type = 'farmer';
     }
 }
 
-export class Investor extends User {
+export class Investor {
     investor_id: string;
-    capital_on_platform?: number;
+    user_id: string;
 
     constructor(init?: Partial<InvestorProps>) {
-        super(init);
         this.investor_id = '';
+        this.user_id = '';
+
         if (init) Object.assign(this, init);
-        this.user_type = 'investor';
     }
-}
-
-/* Factory to instantiate the right subtype from raw data */
-export function createUser(data: any): Farmer | Investor {
-    if (data?.user_type === 'farmer') return new Farmer(data);
-    return new Investor(data);
-}
-
-/* Type guards */
-export function isFarmer(u: User): u is Farmer {
-    return u.user_type === 'farmer';
-}
-export function isInvestor(u: User): u is Investor {
-    return u.user_type === 'investor';
 }

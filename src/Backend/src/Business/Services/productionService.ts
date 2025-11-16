@@ -1,24 +1,11 @@
-class ProductionService {
-    private productions: any[];
+import { ProductionRepositoryPostgres } from '../../Persistence/Repos/productionRepository';
+import { Production } from '../Models/production';
 
-    constructor() {
-        this.productions = [];
-    }
+export class ProductionService {
 
-    public addProduction(production: any): void {
-        this.productions.push(production);
-    }
+    productionRepository = new ProductionRepositoryPostgres();
 
-    public getAllProductions(): any[] {
-        return this.productions;
-    }
-
-    public getProductionById(id: number): any | undefined {
-        return this.productions.find(production => production.id === id);
+    async addProduction(production: Production): Promise<string> {
+        return await this.productionRepository.createProduction(production);
     }
 }
-
-// Example usage
-const productionService = new ProductionService();
-productionService.addProduction({ id: 1, name: 'Production A', details: 'Details about Production A' });
-console.log(productionService.getAllProductions());
