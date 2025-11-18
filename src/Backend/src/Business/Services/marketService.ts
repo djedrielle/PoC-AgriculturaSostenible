@@ -13,6 +13,10 @@ export class MarketService {
         return this.marketRepository.getMarketTokensByTokenId(token_id);
     }
 
+    async getAllTokensOnMarket(): Promise<Token[]> {
+        return this.marketRepository.getAllTokensOnMarket();
+    }
+
 }
 
 export default MarketService;

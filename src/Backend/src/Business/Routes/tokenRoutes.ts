@@ -1,12 +1,12 @@
-// Estos endpoints se encargan de la tokenizacion de activos agricolas
 import { Router, Request, Response } from 'express';
+
+import ProductionController from '../Controllers/productionController';
+import TokenController from '../Controllers/tokenController';
 
 export const router = Router();
 
-router.post('/tokenizeAsset', tokenizeProductionAsset);
+router.post('/tokenizeAsset', ProductionController.tokenizeProductionAsset.bind(ProductionController));
 
-router.post('/buyTokens', buyTokens);
+router.post('/buyTokens', TokenController.buyTokens.bind(TokenController));
 
 router.post('/sellTokens', sellTokens);
-
-router.get('/agroAssetsInfo', getAssetInfo);

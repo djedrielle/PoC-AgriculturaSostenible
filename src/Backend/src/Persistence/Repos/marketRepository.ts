@@ -1,4 +1,3 @@
-import { Market } from '../../Business/Models/market';
 import { Token } from '../../Business/Models/token';
 
 export interface MarketRepository {
@@ -41,4 +40,50 @@ export class MarketRepositoryPostgres implements MarketRepository {
         }
     }
 
+    async getAllTokensOnMarket(): Promise<Token[]> {
+        try {
+            const result = await db.query(
+                `SELECT * FROM market`
+            );
+            return result.rows as Token[];
+        } catch (err) {
+            throw err;
+        }
+    }
+
+    async removeTokensFromMarket(token_name: string, amount: number): Promise<boolean> {
+        try {
+            const result = await db.query(
+                `UPDATE market SET amount_tokens_on_market = amount_tokens_on_market - $1 WHERE token_name = $2`,
+                [amount, token_name]
+            );
+            return result.rowCount > 0;
+        } catch (err) {
+            throw err;
+        }
+    }
+
+    async addTokensToMarket(user_id: string, amount: number): Promise<boolean> {
+        try {
+            const result = await db.query(
+                `UPDATE market SET amount_tokens_on_market = amount_tokens_on_market + $1 WHERE owner_id = $2`,
+                [amount, user_id]
+            );
+            return result.rowCount > 0;
+        } catch (err) {
+            throw err;
+        }
+    }
+
+    async removeTokensOnMarketBySellerId(seller_id: string, amount: number): Promise<boolean> {
+        try {
+            const result = await db.query(
+                `UPDATE market SET amount_tokens_on_market = amount_tokens_on_market - $1 WHERE owner_id = $2`,
+                [amount, seller_id]
+            );
+            return result.rowCount > 0;
+        } catch (err) {
+            throw err;
+        }
+    }
 }
