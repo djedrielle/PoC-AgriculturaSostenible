@@ -1,9 +1,7 @@
-import { Farmer, Investor, User } from '../../Business/Models/user';
+import {  User } from '../../Business/Models/user';
 
 export interface UserRepository {
     createUser(user: User): Promise<string>;
-    createFarmer(farmer: Farmer): Promise<void>;
-    createInvestor(investor: Investor): Promise<void>;
     getUserInfo(): Promise<any>;
     deleteUser(userId: string): Promise<void>;
 }
@@ -34,37 +32,6 @@ export class UserRepositoryPostgres implements UserRepository {
         }
 
         return result.rows[0].user_id as string;
-    } catch (err) {
-        throw err;
-    }
-  }
-
-  async createFarmer(farmer: Farmer): Promise<void> {
-    try {
-        const result = await db.query(
-            `INSERT INTO farmer
-                (user_id, location)
-                VALUES ($1,$2)`,
-            [
-                farmer.user_id,
-                farmer.location,
-            ]
-        );
-    } catch (err) {
-        throw err;
-    }
-  }
-
-  async createInvestor(investor: Investor): Promise<void> {
-    try {
-        const result = await db.query(
-            `INSERT INTO investor
-                (user_id)
-                VALUES ($1)`,
-            [
-                investor.user_id,
-            ]
-        );
     } catch (err) {
         throw err;
     }

@@ -1,10 +1,11 @@
-import { Router, Request, Response } from 'express';
+import { Router } from 'express';
+
+import ValidationController from '../Controllers/validationController';
 
 export const router = Router();
 
-router.post('/affiliate', affiliateToInstitution);
+router.get('/certificateInfo', ValidationController.getCertificateInfo.bind(ValidationController));
 
-router.get('/getCertificateHistory', getCertificateHistory);
+router.post('/affiliate', ValidationController.affiliateToInstitution.bind(ValidationController));
 
-router.post('/requestCertificate', requestCertificate);
-
+router.post('/requestCertificate', ValidationController.requestValidationCertificate.bind(ValidationController));

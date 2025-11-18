@@ -38,4 +38,28 @@ export class ProductionRepositoryPostgres implements ProductionRepository {
     }
   }
 
+    async getProductionHistory(user_id: string): Promise<Production[]> {
+        try {
+            const result = await db.query(
+                `SELECT * FROM production WHERE user_id = $1`,
+                [user_id]
+            );
+            return result.rows.map((row: any) => new Production(
+                row.location,
+                row.user_id,
+                row.crop_type,
+                row.crop_variety,
+                row.est_harvest_date,
+                row.amount,
+                row.measure_unit,
+                row.biologic_features,
+                row.agro_conditions,
+                row.agro_protocols,
+                row.active,
+                row.contract_id
+            ));
+        } catch (err) {
+            throw err;
+        }
+    }
 }

@@ -1,6 +1,6 @@
 import { Request, Response } from 'express';
 import { UserService } from '../Services/userService'; // Ajusta la ruta según tu proyecto
-import { User, Farmer, Investor } from '../Models/user'; // Ajusta la ruta según tu proyecto
+import { User } from '../Models/user'; // Ajusta la ruta según tu proyecto
 
 export class UserController {
     userService = new UserService();
@@ -65,16 +65,6 @@ export class UserController {
             console.error('UserController.create:', err);
             return res.status(500).json({ message: err?.message ?? 'Error interno del servidor' });
         }
-    }
-
-    async getUserInfo(req: Request, res: Response) {
-        const userInfo = await this.userService.getUserInfo();
-        res.json(userInfo);
-    }
-
-    async deleteUser(req: Request, res: Response) {
-        this.userService.deleteUser(req.params.userId);
-        res.status(501).send('Not implemented');
     }
 }
 

@@ -5,20 +5,22 @@
 
 export abstract class Token {
     token_id: string;
-    contract_id: string;
-    owner_address: string;
-    destiny_address_token_amount: number;
-    fecha_emision: string;
-    transferible: boolean;
+    token_name: string;
+    emition_date: string;
+    token_price_USD: number;
+    amount_tokens: number;
+    owner_id: string;
+    production_id: string;
     abstract unidad(): string;
 
-    constructor(token_id: string, contract_id: string, owner_address: string, destiny_address_token_amount: number, fecha_emision: string, transferible: boolean) {
+    constructor(token_id: string, token_name: string, emition_date: string, token_price_USD: number, amount_tokens: number, owner_id: string, production_id: string) {
         this.token_id = token_id;
-        this.contract_id = contract_id;
-        this.owner_address = owner_address;
-        this.destiny_address_token_amount = destiny_address_token_amount;
-        this.fecha_emision = fecha_emision;
-        this.transferible = transferible;
+        this.token_name = token_name;
+        this.emition_date = emition_date;
+        this.token_price_USD = token_price_USD;
+        this.amount_tokens = amount_tokens;
+        this.owner_id = owner_id;
+        this.production_id = production_id;
     }
 }
 
@@ -42,16 +44,15 @@ export class TokenFactory {
      * - type: identifica la subclase a crear
      * - los siguientes parámetros son los comunes a todos los tokens
      */
-    static create(type: TokenType, token_id: string, contract_id: string, owner_address: string, destiny_address_token_amount: number, fecha_emision: string, transferible: boolean): Token {
+    static create(type: TokenType, token_id: string, token_name: string, emition_date: string, token_price_USD: number, amount_tokens: number, on_market: boolean, owner_id: string, production_id: string): Token {
         switch (type) {
             case 'cafe':
-                return new CafeToken(token_id, contract_id, owner_address, destiny_address_token_amount, fecha_emision, transferible);
+                return new CafeToken(token_id, token_name, emition_date, token_price_USD, amount_tokens, owner_id, production_id);
             case 'pina':
-                return new PinaToken(token_id, contract_id, owner_address, destiny_address_token_amount, fecha_emision, transferible);
+                return new PinaToken(token_id, token_name, emition_date, token_price_USD, amount_tokens, owner_id, production_id);
             case 'banano':
-                return new BananoToken(token_id, contract_id, owner_address, destiny_address_token_amount, fecha_emision, transferible);
+                return new BananoToken(token_id, token_name, emition_date, token_price_USD, amount_tokens, owner_id, production_id);
             default:
-                // Si se necesita comportamiento por defecto, cambiar aquí.
                 throw new Error(`Tipo de token desconocido: ${type}`);
         }
     }

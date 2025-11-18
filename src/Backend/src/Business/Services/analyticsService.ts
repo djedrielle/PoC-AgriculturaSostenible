@@ -1,4 +1,6 @@
-import axios from 'axios';
+import TransactionService from './transactionService';
+import MarketService from './marketService';
+import TokenService from './tokenService';
 
 interface TokenPrice {
     timestamp: Date;
@@ -13,71 +15,59 @@ interface TokenAnalytics {
 }
 
 class AnalyticsService {
-    private apiBaseUrl: string;
+    private transactionService = new TransactionService();
+    private marketService = new MarketService();
+    private tokenService = new TokenService();
+    
     private priceHistory: TokenPrice[] = [];
+    // Por aqui hay que cargar el historial de precios desde la base de datos.
 
-    constructor(apiBaseUrl: string = 'https://api.coingecko.com/api/v3') {
-        this.apiBaseUrl = apiBaseUrl;
-    }
-
-    async getCurrentTokenPrice(): Promise<number> {
-        try {
-            const response = await axios.get(`${this.apiBaseUrl}/simple/price`, {
-                params: {
-                    ids: 'agriculture-token', // Ajusta según tu token
-                    vs_currencies: 'usd'
-                }
-            });
-            return response.data['agriculture-token'].usd;
-        } catch (error) {
-            throw new Error('Error fetching current token price');
+    async getCurrentTokenPrice(token_id: string, lastTokenPrice: number): Promise<number> {
+        // Se va a consultar el precio de la ultima transaccion del token deseado.
+        // Si esta es diferente al precio almacenado, se actualiza el precio almacenado.
+        const lastTransaction = await this.transactionService.getLastTransactionPriceAndDate(token_id);
+        if (lastTransaction && lastTransaction.price !== lastTokenPrice) {
+            return lastTransaction.price;
         }
+
+        return lastTokenPrice;
     }
 
-    async getMarketSupply(): Promise<number> {
-        try {
-            const response = await axios.get(`${this.apiBaseUrl}/coins/agriculture-token`);
-            return response.data.market_data.circulating_supply;
-        } catch (error) {
-            throw new Error('Error fetching market supply');
+    async getMarketSupply(token_id: string): Promise<number> {
+        // Se va a consultar el suministro de mercado del token deseado.
+        return this.marketService.getMarketTokensByTokenId(token_id);
+    }
+
+    async getTotalSupply(token_id: string): Promise<number> {
+        // Se va a consultar el suministro total del token deseado.
+        // Hay que buscar en las tablas market y tokens.
+        let amountOffMarket = await this.tokenService.getAmountTokensOffMarket(token_id);
+        let amountOnMarket = await this.marketService.getMarketTokensByTokenId(token_id);
+        return amountOffMarket + amountOnMarket;
+    }
+
+    async getPriceHistory(token_id: string): Promise<TokenPrice[]> {
+        // Se va a consultar el precio de la ultima transaccion del token deseado.
+        // Si esta es diferente al ultimo precio almacenado, entonces se agrega a la lista.
+        const lastTransaction = await this.transactionService.getLastTransactionPriceAndDate(token_id);
+        if (lastTransaction) {
+            const lastStoredPrice = this.priceHistory.length > 0 ? this.priceHistory[this.priceHistory.length - 1].price : null;
+            if (lastTransaction.price !== lastStoredPrice) {
+                this.priceHistory.push({
+                    timestamp: new Date(lastTransaction.date),
+                    price: lastTransaction.price
+                });
+            }
         }
+        return this.priceHistory;
     }
 
-    async getTotalSupply(): Promise<number> {
+    async getFullAnalytics(token_id: string, lastTokenPrice: number): Promise<TokenAnalytics> {
         try {
-            const response = await axios.get(`${this.apiBaseUrl}/coins/agriculture-token`);
-            return response.data.market_data.total_supply;
-        } catch (error) {
-            throw new Error('Error fetching total supply');
-        }
-    }
-
-    async getPriceHistory(days: number = 30): Promise<TokenPrice[]> {
-        try {
-            const response = await axios.get(`${this.apiBaseUrl}/coins/agriculture-token/market_chart`, {
-                params: {
-                    vs_currency: 'usd',
-                    days: days
-                }
-            });
-            
-            this.priceHistory = response.data.prices.map((price: [number, number]) => ({
-                timestamp: new Date(price[0]),
-                price: price[1]
-            }));
-            
-            return this.priceHistory;
-        } catch (error) {
-            throw new Error('Error fetching price history');
-        }
-    }
-
-    async getFullAnalytics(days: number = 30): Promise<TokenAnalytics> {
-        try {
-            const currentPrice = await this.getCurrentTokenPrice();
-            const marketSupply = await this.getMarketSupply();
-            const totalSupply = await this.getTotalSupply();
-            const priceHistory = await this.getPriceHistory(days);
+            const currentPrice = await this.getCurrentTokenPrice(token_id, lastTokenPrice);
+            const marketSupply = await this.getMarketSupply(token_id);
+            const totalSupply = await this.getTotalSupply(token_id);
+            const priceHistory = await this.getPriceHistory(token_id);
 
             return {
                 currentPrice,

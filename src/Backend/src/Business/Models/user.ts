@@ -11,16 +11,6 @@ export interface UserProps {
     identification_number: string;
 }
 
-export interface FarmerProps {
-    farmer_id: string;
-    user_id: string;
-}
-
-export interface InvestorProps{
-    investor_id: string;
-    user_id: string;
-}
-
 export class User {
     user_id: string;
     username: string;
@@ -45,30 +35,6 @@ export class User {
         this.registration_date = new Date().toISOString();
         this.active = true;
         this.identification_number = '';
-
-        if (init) Object.assign(this, init);
-    }
-}
-
-export class Farmer {
-    farmer_id: string;
-    user_id: string;
-
-    constructor(init?: Partial<FarmerProps>) {
-        this.farmer_id = '';
-        this.user_id = '';
-
-        if (init) Object.assign(this, init);
-    }
-}
-
-export class Investor {
-    investor_id: string;
-    user_id: string;
-
-    constructor(init?: Partial<InvestorProps>) {
-        this.investor_id = '';
-        this.user_id = '';
 
         if (init) Object.assign(this, init);
     }
