@@ -1,4 +1,5 @@
 import { Token } from '../../Business/Models/token';
+import db from '../localSupabase';
 
 export interface TokenRepository {
     createTokens(token: Token): Promise<string>;

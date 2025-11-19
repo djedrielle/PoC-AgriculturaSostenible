@@ -1,4 +1,5 @@
 import { Production } from '../../Business/Models/production';
+import db from '../localSupabase';
 
 export interface ProductionRepository {
     createProduction(production: Production): Promise<string>;

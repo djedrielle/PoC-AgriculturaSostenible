@@ -1,4 +1,5 @@
-import {  User } from '../../Business/Models/user';
+import { User } from '../../Business/Models/user';
+import db from '../localSupabase';
 
 export interface UserRepository {
     createUser(user: User): Promise<string>;

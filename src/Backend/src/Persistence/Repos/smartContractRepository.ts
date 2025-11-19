@@ -1,4 +1,5 @@
 import { SmartContract } from '../../Business/Models/smart_contract';
+import db from '../localSupabase';
 
 export interface SmartContractRepository {
     createSmartContract(sContract: SmartContract): Promise<string>;

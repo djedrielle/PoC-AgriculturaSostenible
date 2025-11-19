@@ -1,4 +1,5 @@
 import { Transaction } from '../../Business/Models/transaction';
+import db from '../localSupabase';
 
 export interface TransactionRepository {
     createTransaction(transaction: Transaction): Promise<string>;
