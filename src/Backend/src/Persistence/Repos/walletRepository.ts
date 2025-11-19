@@ -4,7 +4,7 @@ import db from '../localSupabase';
 export interface WalletRepository {
     getUserTokens(user_id: string): Promise<Token[]>;
     addTokensToWallet(user_id: string, token_name: string, amount: number): Promise<boolean>;
-    removeTokensFromWallet(user_id: string, amount: number): Promise<boolean>;
+    removeTokensFromWallet(user_id: string, token_name: string, amount: number): Promise<boolean>;
 }
 
 export class WalletRepositoryPostgres implements WalletRepository {
@@ -33,11 +33,11 @@ export class WalletRepositoryPostgres implements WalletRepository {
         }
     }
 
-    async removeTokensFromWallet(user_id: string, amount: number): Promise<boolean> {
+    async removeTokensFromWallet(user_id: string, token_name: string, amount: number): Promise<boolean> {
         try {
             const result = await db.query(
-                `UPDATE wallet SET amount_tokens = amount_tokens - $1 WHERE user_id = $2`,
-                [amount, user_id]
+                `UPDATE wallet SET amount_tokens = amount_tokens - $1 WHERE user_id = $2 AND token_name = $3`,
+                [amount, user_id, token_name]
             );
             return result.rowCount > 0;
         } catch (err) {

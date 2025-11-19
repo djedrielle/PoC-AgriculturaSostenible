@@ -13,8 +13,9 @@ export class ValidationService {
         return 'Cita de validación solicitada con éxito';
     }
     
-    async affiliateToInstitution(user_id: string, institution_id: string): Promise<void> {
-        this.validationCertificateRepo.affiliateToInstitution(user_id, institution_id);
+    async affiliateToInstitution(user_id: string, institution_id: string): Promise<string> {
+        await this.validationCertificateRepo.affiliateToInstitution(user_id, institution_id);
+        return "Usuario afiliado a la institución con éxito";
     }
     
     async getCertificateInfo(user_id: string): Promise<string> {

@@ -7,7 +7,8 @@ export class MarketController {
     marketService = new MarketService();
     
     async getAllTokensOnMarket(req: Request, res: Response) {
-        return this.marketService.getAllTokensOnMarket();
+        const marketTokens = await this.marketService.getAllTokensOnMarket();
+        return res.status(200).json(marketTokens);
     }
 
 }

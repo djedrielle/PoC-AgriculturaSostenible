@@ -16,7 +16,7 @@ export class ProductionController {
     
     async tokenizeProductionAsset(req: Request, res: Response) {
         // Crear un contrato inteligente para la tokenización del activo agrícola
-        const smartContractData = req.body.smart_contract;
+        const smartContractData = req.body.smart_contract_data;
         const smartContractObj = new SmartContract(
             smartContractData.contract_id,
             smartContractData.contract_address,
@@ -29,7 +29,7 @@ export class ProductionController {
         );
         const contractId = await this.smartContractService.addSmartContract(smartContractObj);
         // Crear un objeto de producción a partir de los datos recibidos, y el contract_id retornado
-        const productionData = req.body.production;
+        const productionData = req.body.production_data;
         const productionObj = new Production(
             productionData.location,
             productionData.farmer_id,
@@ -46,7 +46,7 @@ export class ProductionController {
         );
         const productionId = await this.productionService.addProduction(productionObj);
         // Ahora hay que crear los tokens
-        const tokenData = req.body.token;
+        const tokenData = req.body.token_data;
         const tokenObj: Token = TokenFactory.create(
             tokenData.type,
             tokenData.token_id,
@@ -66,7 +66,8 @@ export class ProductionController {
     }
 
     async getProductionHistory(req: Request, res: Response) {
-        return this.productionService.getProductionHistory(req.body.user_id);
+        const productionHistory = await this.productionService.getProductionHistory(req.body.user_id);
+        return res.status(200).json(productionHistory);
     }
 
 }

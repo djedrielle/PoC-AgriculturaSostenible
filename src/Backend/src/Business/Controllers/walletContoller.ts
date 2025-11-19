@@ -7,7 +7,8 @@ export class WalletController {
     walletService = new WalletService();
     
     async getTokensOnWallet(req: Request, res: Response) {
-        return this.walletService.getUserTokens(req.body.user_id);
+        const tokens = await this.walletService.getUserTokens(req.body.user_id);
+        return res.status(200).json(tokens);
     }
 
 }

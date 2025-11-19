@@ -4,3 +4,4 @@ import walletController from '../Controllers/walletContoller';
 export const router = Router();
 
 router.get('/walletTokens', walletController.getTokensOnWallet.bind(walletController));
+// Receives body { user_id: string }

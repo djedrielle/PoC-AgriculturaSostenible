@@ -6,7 +6,7 @@ export interface MarketRepository {
     getMarketTokensByTokenId(token_id: string): Promise<number>;
     getAllTokensOnMarket(): Promise<Token[]>;
     removeTokensFromMarket(token_name: string, amount: number): Promise<boolean>;
-    addTokensToMarket(user_id: string, amount: number): Promise<boolean>;
+    addTokensToMarket(user_id: string, token_name: string, amount: number): Promise<boolean>;
     removeTokensOnMarketBySellerId(seller_id: string, amount: number): Promise<boolean>;
 }
 
@@ -69,11 +69,11 @@ export class MarketRepositoryPostgres implements MarketRepository {
         }
     }
 
-    async addTokensToMarket(user_id: string, amount: number): Promise<boolean> {
+    async addTokensToMarket(user_id: string, token_name: string, amount: number): Promise<boolean> {
         try {
             const result = await db.query(
-                `UPDATE market SET amount_tokens_on_market = amount_tokens_on_market + $1 WHERE owner_id = $2`,
-                [amount, user_id]
+                `UPDATE market SET amount_tokens_on_market = amount_tokens_on_market + $1 WHERE owner_id = $2 AND token_name = $3`,
+                [amount, user_id, token_name]
             );
             return result.rowCount > 0;
         } catch (err) {

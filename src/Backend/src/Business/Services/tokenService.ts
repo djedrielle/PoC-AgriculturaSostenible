@@ -26,9 +26,9 @@ export class TokenService {
         return true;
     }
 
-    sellTokens(userId: string, amount: number): boolean {
-        this.walletRepository.removeTokensFromWallet(userId, amount);
-        this.marketRepository.addTokensToMarket(userId, amount);
+    sellTokens(userId: string, token_name: string, amount: number): boolean {
+        this.walletRepository.removeTokensFromWallet(userId, token_name, amount);
+        this.marketRepository.addTokensToMarket(userId, token_name, amount);
         return true;
     }
 

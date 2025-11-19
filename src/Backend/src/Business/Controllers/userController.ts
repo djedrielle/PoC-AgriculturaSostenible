@@ -8,20 +8,6 @@ export class UserController {
     async createUser(req: Request, res: Response) {
         
         try {
-            /** Data received
-             * req.body = {
-             * username: string;
-             * first_name: string;
-             * last_name: string;
-             * email: string;
-             * user_type: 'farmer' | 'investor';
-             * wallet_address?: string;
-             * identification_number?: string;
-             * active?: boolean;
-             * farmerData?: { location: string;  }  // Si user_type es 'farmer'
-             * investorData?: {  }                     // Si user_type es 'investor'
-             * }
-             */
             const userData = req.body;
 
             // Crear instancia de User y guardarla (se usa User model para crear el objeto,
@@ -60,7 +46,7 @@ export class UserController {
             }
 
             // Responder con el usuario creado y, si aplica, el documento de rol creado
-            return res.status(201).json({ user: createdUser, roleData: roleDoc });
+            return res.status(201).json({ user_id: createdUserId, roleData: roleDoc });
         } catch (err: any) {
             console.error('UserController.create:', err);
             return res.status(500).json({ message: err?.message ?? 'Error interno del servidor' });
