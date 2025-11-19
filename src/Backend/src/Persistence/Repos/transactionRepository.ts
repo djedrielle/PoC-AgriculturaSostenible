@@ -2,6 +2,7 @@ import { Transaction } from '../../Business/Models/transaction';
 
 export interface TransactionRepository {
     createTransaction(transaction: Transaction): Promise<string>;
+    getTransactionPriceAndDateByTokenId(tokenId: string): Promise<{ price: number; date: string } | null>;
 }
 
 export class TransactionRepositoryPostgres implements TransactionRepository {
@@ -9,12 +10,13 @@ export class TransactionRepositoryPostgres implements TransactionRepository {
     async createTransaction(transaction: Transaction): Promise<string> {
         try {
             const result = await db.query(
-                `INSERT INTO transaction (transaction_id, transaction_hash, token_amount_transferred, token_unit_price, platform_comition, transaction_date, buyer_id, seller_id) 
-                VALUES ($1, $2, $3, $4, $5, $6, $7, $8) 
+                `INSERT INTO transaction (transaction_id, transaction_hash, token_name, token_amount_transferred, token_unit_price, platform_comition, transaction_date, buyer_id, seller_id) 
+                VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9) 
                 RETURNING transaction_id`,
                 [
                     transaction.transaction_id,
                     transaction.transaction_hash,
+                    transaction.token_name,
                     transaction.token_amount_transferred,
                     transaction.token_unit_price,
                     transaction.platform_comition,

@@ -1,3 +1,5 @@
+// Not used yet
+
 class OracleData {
     data_id: string;
     data_type: string;

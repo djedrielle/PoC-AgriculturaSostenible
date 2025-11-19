@@ -2,6 +2,11 @@ import { Token } from '../../Business/Models/token';
 
 export interface MarketRepository {
     publishOnMarket(token: Token): Promise<string>;
+    getMarketTokensByTokenId(token_id: string): Promise<number>;
+    getAllTokensOnMarket(): Promise<Token[]>;
+    removeTokensFromMarket(token_name: string, amount: number): Promise<boolean>;
+    addTokensToMarket(user_id: string, amount: number): Promise<boolean>;
+    removeTokensOnMarketBySellerId(seller_id: string, amount: number): Promise<boolean>;
 }
 
 export class MarketRepositoryPostgres implements MarketRepository {

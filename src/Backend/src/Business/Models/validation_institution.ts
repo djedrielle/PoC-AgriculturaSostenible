@@ -1,3 +1,5 @@
+// Not used yet
+
 class ValidationInstitution {
     instituiton_id: string;
     institution_name: string;

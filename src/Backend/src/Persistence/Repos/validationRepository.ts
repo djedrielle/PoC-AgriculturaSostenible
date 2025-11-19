@@ -1,5 +1,6 @@
 export interface ValidationCertificateRepository {
     affiliateToInstitution(user_id: string, institution_id: string): Promise<void>;
+    getValidationInfoById(user_id: string): Promise<string>;
 }
 
 export class ValidationCertificateRepositoryPostgres implements ValidationCertificateRepository {

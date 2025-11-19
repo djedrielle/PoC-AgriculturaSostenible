@@ -2,6 +2,7 @@ import { Production } from '../../Business/Models/production';
 
 export interface ProductionRepository {
     createProduction(production: Production): Promise<string>;
+    getProductionHistory(user_id: string): Promise<Production[]>;
 }
 
 export class ProductionRepositoryPostgres implements ProductionRepository {

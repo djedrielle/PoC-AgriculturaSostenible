@@ -2,6 +2,8 @@ import { Token } from '../../Business/Models/token';
 
 export interface WalletRepository {
     getUserTokens(user_id: string): Promise<Token[]>;
+    addTokensToWallet(user_id: string, token_name: string, amount: number): Promise<boolean>;
+    removeTokensFromWallet(user_id: string, amount: number): Promise<boolean>;
 }
 
 export class WalletRepositoryPostgres implements WalletRepository {

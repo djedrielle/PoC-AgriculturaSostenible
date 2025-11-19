@@ -3,10 +3,10 @@ import { WalletRepositoryPostgres } from '../../Persistence/Repos/walletReposito
 
 export class WalletService {
 
-    walletRepositorie = new WalletRepositoryPostgres();
+    walletRepository = new WalletRepositoryPostgres();
 
     async getUserTokens(userId: string): Promise<Token[]> {
-        return this.walletRepositorie.getUserTokens(userId);
+        return this.walletRepository.getUserTokens(userId);
     }
 
 }

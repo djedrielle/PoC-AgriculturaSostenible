@@ -1,4 +1,5 @@
-import TransactionRepositoryPostgres from '../../Persistence/Repos/transactionRepository';
+import { TransactionRepositoryPostgres } from '../../Persistence/Repos/transactionRepository';
+import { Transaction } from '../Models/transaction';
 
 class TransactionService {
     
@@ -6,6 +7,10 @@ class TransactionService {
     
     async getLastTransactionPriceAndDate(token_id: string): Promise<{ price: number; date: string } | null> {
         return this.transactionRepo.getTransactionPriceAndDateByTokenId(token_id);
+    }
+
+    async createTransaction(transaction: Transaction): Promise<string> {
+        this.transactionRepo.createTransaction(transaction);
     }
 }
 

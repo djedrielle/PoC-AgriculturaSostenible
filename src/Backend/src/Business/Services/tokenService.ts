@@ -1,8 +1,11 @@
 import { Token } from "../Models/token";
+import { Transaction } from "../Models/transaction";
 
 import { TokenRepositoryPostgres } from "../../Persistence/Repos/tokenRepository";
 import { MarketRepositoryPostgres } from "../../Persistence/Repos/marketRepository";
 import { WalletRepositoryPostgres } from "../../Persistence/Repos/walletRepository";
+
+import TransactionService from "./transactionService";
 
 export class TokenService {
 
@@ -10,13 +13,16 @@ export class TokenService {
     marketRepository = new MarketRepositoryPostgres();
     walletRepository = new WalletRepositoryPostgres();
 
+    transactionService = new TransactionService();
+
     async createTokens(token: Token): Promise<string> {
         return await this.tokenRepository.createTokens(token);
     }
 
-    buyTokens(buyer_id: string, token_name: string, amount: number): boolean {
-        this.marketRepository.removeTokensFromMarket(token_name, amount);
-        this.walletRepository.addTokensToWallet(buyer_id, token_name, amount);
+    buyTokens(transaction: Transaction): boolean {
+        this.marketRepository.removeTokensFromMarket(transaction.token_name, transaction.token_amount_transferred);
+        this.walletRepository.addTokensToWallet(transaction.buyer_id, transaction.token_name, transaction.token_amount_transferred);
+        this.transactionService.createTransaction(transaction);
         return true;
     }
 

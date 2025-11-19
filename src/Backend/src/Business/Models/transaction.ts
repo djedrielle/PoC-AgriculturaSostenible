@@ -1,17 +1,19 @@
 export class Transaction {
-    transaction_id: string;
-    transaction_hash: string;
+    transaction_id?: string;
+    transaction_hash?: string;
+    token_name: string;
     token_amount_transferred: number;
     token_unit_price: number;
     platform_comition: number;
-    transaction_date: string;
-    buyer_id?: string;
-    seller_id?: string;
+    transaction_date?: string;
+    buyer_id: string;
+    seller_id: string;
 
 
-    constructor(transaction_id: string, transaction_hash: string, token_amount_transferred: number, token_unit_price: number, platform_comition: number, transaction_date: string, buyer_id?: string, seller_id?: string) {
+    constructor(token_name: string, token_amount_transferred: number, token_unit_price: number, platform_comition: number,  buyer_id: string, seller_id: string, transaction_id?: string, transaction_hash?: string, transaction_date?: string,) {
         this.transaction_id = transaction_id;
         this.transaction_hash = transaction_hash;
+        this.token_name = token_name;
         this.token_amount_transferred = token_amount_transferred;
         this.token_unit_price = token_unit_price;
         this.platform_comition = platform_comition;

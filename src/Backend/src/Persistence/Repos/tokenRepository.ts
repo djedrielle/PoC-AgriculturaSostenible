@@ -2,6 +2,7 @@ import { Token } from '../../Business/Models/token';
 
 export interface TokenRepository {
     createTokens(token: Token): Promise<string>;
+    getAmountTokensOffMarket(token_id: string): Promise<number>;
 }
 
 export class TokenRepositoryPostgres implements TokenRepository {
