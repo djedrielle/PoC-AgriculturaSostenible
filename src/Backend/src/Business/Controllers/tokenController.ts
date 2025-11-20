@@ -19,8 +19,8 @@ export class TokenController {
     }
 
     async sellTokens(req: Request, res: Response): Promise<void> {
-        const { seller_id, token_name, amount } = req.body;
-        const result = await this.tokenService.sellTokens(seller_id, token_name, amount);
+        const { seller_id, token_name, amount, token_unit_price } = req.body;
+        const result = await this.tokenService.sellTokens(seller_id, token_name, amount, token_unit_price);
         res.status(200).json(result);
     }
 }

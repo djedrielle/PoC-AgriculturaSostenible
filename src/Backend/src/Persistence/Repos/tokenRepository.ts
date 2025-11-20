@@ -12,14 +12,13 @@ export class TokenRepositoryPostgres implements TokenRepository {
         try {
             const result = await db.query(
                 `INSERT INTO token
-                    (token_name, emition_date, token_price_USD, amount_tokens, on_market, owner_id, production_id)
-                    VALUES ($1,$2,$3,$4,$5,$6,$7)`,
+                    (token_name, emition_date, token_price_USD, amount_tokens, owner_id, production_id)
+                    VALUES ($1,$2,$3,$4,$5,$6) RETURNING token_id`,
                 [
                     token.token_name,
                     token.emition_date,
                     token.token_price_USD,
                     token.amount_tokens,
-                    token.on_market,
                     token.owner_id,
                     token.production_id
                 ]
@@ -28,8 +27,8 @@ export class TokenRepositoryPostgres implements TokenRepository {
             if (!result?.rows?.length) {
                 throw new Error("Failed to create token");
             }
-            // Hay que definir que queremos devolver
-            return result.rows[0].user_id as string;
+            console.log("Token created with ID:", result.rows[0].token_id);
+            return result.rows[0].token_id as string;
         } catch (err) {
             throw err;
         }
@@ -41,7 +40,7 @@ export class TokenRepositoryPostgres implements TokenRepository {
                 `SELECT amount_tokens FROM token WHERE token_id = $1`,
                 [token_id]
             );
-            return result;
+            return result.rows[0].amount_tokens as number;
         } catch (err) {
             throw err;
         }

@@ -25,7 +25,7 @@ export class SmartContractRepositoryPostgres implements SmartContractRepository 
         if (!result?.rows?.length) {
             throw new Error("Failed to create smart contract record");
         }
-
+        console.log("Smart contract created with ID:", result.rows[0].contract_id);
         return result.rows[0].contract_id as string;
     } catch (err) {
         throw err;

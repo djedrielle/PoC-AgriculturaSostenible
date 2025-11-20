@@ -6,7 +6,7 @@ export interface MarketRepository {
     getMarketTokensByTokenId(token_id: string): Promise<number>;
     getAllTokensOnMarket(): Promise<Token[]>;
     removeTokensFromMarket(token_name: string, amount: number): Promise<boolean>;
-    addTokensToMarket(user_id: string, token_name: string, amount: number): Promise<boolean>;
+    addTokensToMarket(user_id: string, token_name: string, amount: number, token_unit_price: number): Promise<boolean>;
     removeTokensOnMarketBySellerId(seller_id: string, amount: number): Promise<boolean>;
 }
 
@@ -14,8 +14,8 @@ export class MarketRepositoryPostgres implements MarketRepository {
     async publishOnMarket(token: Token): Promise<string> {
         try {
             const result = await db.query(
-                `INSERT INTO market (token_name, current_token_price_USD, amount_tokens_on_market, initial_token_price, owner_id)
-                VALUES ($1, $2, $3, $4, $5)`,
+                `INSERT INTO market (token_name, current_token_price_USD, amount_tokens_on_market, owner_id)
+                VALUES ($1, $2, $3, $4)`,
                 [
                     token.token_name,
                     token.token_price_USD,
@@ -27,7 +27,7 @@ export class MarketRepositoryPostgres implements MarketRepository {
             if (!result?.rows?.length) {
                 throw new Error("Failed to create market record");
             }
-            // Hay que analizar que hay que devovler. Me parece que nada
+            console.log("Market record created:", result.rows[0]);
             return result.rows[0].market_id as string;
         } catch (err) {
             throw err;
@@ -40,7 +40,7 @@ export class MarketRepositoryPostgres implements MarketRepository {
                 `SELECT amount_tokens_on_market FROM market WHERE token_id = $1`,
                 [token_id]
             );
-            return result;
+            return result.rows[0]?.amount_tokens_on_market || 0;
         } catch (err) {
             throw err;
         }
@@ -63,19 +63,34 @@ export class MarketRepositoryPostgres implements MarketRepository {
                 `UPDATE market SET amount_tokens_on_market = amount_tokens_on_market - $1 WHERE token_name = $2`,
                 [amount, token_name]
             );
-            return result.rowCount > 0;
+            console.log("Tokens removed from market:", result.rowCount);
+            return true;
         } catch (err) {
             throw err;
         }
     }
 
-    async addTokensToMarket(user_id: string, token_name: string, amount: number): Promise<boolean> {
+    async addTokensToMarket(user_id: string, token_name: string, amount: number, token_unit_price: number): Promise<boolean> {
         try {
-            const result = await db.query(
-                `UPDATE market SET amount_tokens_on_market = amount_tokens_on_market + $1 WHERE owner_id = $2 AND token_name = $3`,
-                [amount, user_id, token_name]
+            const checkResult = await db.query(
+            `SELECT * FROM market WHERE token_owner_id = $1 AND token_name = $2`,
+            [user_id, token_name]
             );
-            return result.rowCount > 0;
+
+            if (checkResult.rows.length > 0) {
+                await db.query(
+                    `UPDATE market SET amount_tokens_on_market = amount_tokens_on_market + $1, current_token_price_usd = $2 WHERE token_owner_id = $3 AND token_name = $4`,
+                    [amount, token_unit_price, user_id, token_name]
+                );
+                console.log("Existing tokens updated on market:", token_name, token_unit_price);
+            } else {
+                await db.query(
+                    `INSERT INTO market (token_name, amount_tokens_on_market, token_owner_id, current_token_price_usd) VALUES ($1, $2, $3, $4)`,
+                    [token_name, amount, user_id, token_unit_price]
+                    );
+                    console.log("New tokens added to market:", token_name, token_unit_price);
+            }
+            return true;
         } catch (err) {
             throw err;
         }
@@ -87,7 +102,7 @@ export class MarketRepositoryPostgres implements MarketRepository {
                 `UPDATE market SET amount_tokens_on_market = amount_tokens_on_market - $1 WHERE owner_id = $2`,
                 [amount, seller_id]
             );
-            return result.rowCount > 0;
+            return true;
         } catch (err) {
             throw err;
         }

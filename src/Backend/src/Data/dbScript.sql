@@ -38,8 +38,8 @@ CREATE TABLE Production (
 
 CREATE TABLE Token (
     token_id SERIAL PRIMARY KEY,
-    token_name VARCHAR,
-    emition_date TIMESTAMP,
+    token_name VARCHAR unique,
+    emition_date TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
     token_price_USD NUMERIC,
     amount_tokens NUMERIC,
     owner_id INTEGER REFERENCES "User"(user_id),
@@ -76,12 +76,11 @@ CREATE TABLE Validation_Certificate (
     user_id INTEGER REFERENCES "User"(user_id)
 );
 
-
 CREATE TABLE Oracle_Data (
     data_id SERIAL PRIMARY KEY,
     data_title VARCHAR,
     data VARCHAR,
-    date_sourced CURRENT_TIMESTAMP,
+    date_sourced TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
     data_source VARCHAR,
     verified BOOLEAN
 );

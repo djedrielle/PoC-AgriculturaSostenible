@@ -19,16 +19,16 @@ export class TokenService {
         return await this.tokenRepository.createTokens(token);
     }
 
-    buyTokens(transaction: Transaction): boolean {
-        this.marketRepository.removeTokensFromMarket(transaction.token_name, transaction.token_amount_transferred);
-        this.walletRepository.addTokensToWallet(transaction.buyer_id, transaction.token_name, transaction.token_amount_transferred);
-        this.transactionService.createTransaction(transaction);
-        return true;
+    async buyTokens(transaction: Transaction): Promise<string> {
+        await this.marketRepository.removeTokensFromMarket(transaction.token_name, transaction.token_amount_transferred);
+        await this.walletRepository.addTokensToWallet(transaction.buyer_id, transaction.token_name, transaction.token_amount_transferred, transaction.token_unit_price);
+        const transactionId = await this.transactionService.createTransaction(transaction);
+        return "Transaction Success ID:" + transactionId;
     }
 
-    sellTokens(userId: string, token_name: string, amount: number): boolean {
-        this.walletRepository.removeTokensFromWallet(userId, token_name, amount);
-        this.marketRepository.addTokensToMarket(userId, token_name, amount);
+    async sellTokens(userId: string, token_name: string, amount: number, token_unit_price: number): Promise<boolean> {
+        await this.walletRepository.removeTokensFromWallet(userId, token_name, amount);
+        await this.marketRepository.addTokensToMarket(userId, token_name, amount, token_unit_price);
         return true;
     }
 

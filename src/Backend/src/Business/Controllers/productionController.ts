@@ -49,20 +49,21 @@ export class ProductionController {
         const tokenData = req.body.token_data;
         const tokenObj: Token = TokenFactory.create(
             tokenData.type,
-            tokenData.token_id,
             tokenData.token_name,
             tokenData.emition_date,
             tokenData.token_price_USD,
             tokenData.amount_tokens,
-            tokenData.on_market,
             tokenData.owner_id,
             productionId
         );
         // Hay que analizar qué devolver
         const tokenId = await this.tokenService.createTokens(tokenObj);
-        res.status(201).json({ message: 'Producción tokenizada con éxito', contractId, tokenId });
+
         // Publicar los tokens en Market, esto lo realiza el smart contract
         this.smartContractService.publishOnMarket(tokenObj);
+
+        return res.status(201).json({ message: 'Producción tokenizada con éxito', contractId, tokenId });
+        
     }
 
     async getProductionHistory(req: Request, res: Response) {

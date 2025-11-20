@@ -9,4 +9,4 @@ router.get('/tokenAnalytics', AnalyticsController.getTokenAnalytics.bind(Analyti
 // Receive body = { token_id: string, lastTokenPrice: number }
 
 router.get('/getProductionHistory', ProductionController.getProductionHistory.bind(ProductionController));
-// Receive body = { user_id: string }
+// Receive body = { user_id: string } Deberia de cambiarse a POST

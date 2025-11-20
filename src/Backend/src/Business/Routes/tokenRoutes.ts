@@ -22,7 +22,8 @@ router.post('/sellTokens', TokenController.sellTokens.bind(TokenController));
     body {
         seller_id,
         token_name,
-        amount
+        amount,
+        token_unit_price
     }
 */
 
@@ -30,7 +31,6 @@ router.post('/tokenizeAsset', ProductionController.tokenizeProductionAsset.bind(
 /* Receives in the request 
     body {
         smart_contract_data = {
-        contract_id,
         contract_address,
         standard_implemented,
         initial_token_price,
@@ -54,12 +54,10 @@ router.post('/tokenizeAsset', ProductionController.tokenizeProductionAsset.bind(
         },
         token_data = {
             type,
-            token_id,
             token_name,
             emition_date,
             token_price_USD,
-            amount_tokens,
-            on_market,
+            amount_tokens,  
             owner_id
         }
     }

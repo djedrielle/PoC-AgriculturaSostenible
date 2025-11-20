@@ -11,17 +11,16 @@ export class TransactionRepositoryPostgres implements TransactionRepository {
     async createTransaction(transaction: Transaction): Promise<string> {
         try {
             const result = await db.query(
-                `INSERT INTO transaction (transaction_id, transaction_hash, token_name, token_amount_transferred, token_unit_price, platform_comition, transaction_date, buyer_id, seller_id) 
-                VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9) 
+                `INSERT INTO transaction (transaction_hash, token_amount_transfered, token_unit_price, platform_commission_percentage, transaction_date, token_name, buyer_id, seller_id) 
+                VALUES ($1, $2, $3, $4, $5, $6, $7, $8) 
                 RETURNING transaction_id`,
                 [
-                    transaction.transaction_id,
                     transaction.transaction_hash,
-                    transaction.token_name,
                     transaction.token_amount_transferred,
                     transaction.token_unit_price,
                     transaction.platform_comition,
                     transaction.transaction_date,
+                    transaction.token_name,
                     transaction.buyer_id,
                     transaction.seller_id
                 ]
@@ -31,6 +30,7 @@ export class TransactionRepositoryPostgres implements TransactionRepository {
                 throw new Error("Failed to create transaction");
             }
             // Hay que definir que queremos devolver
+            console.log("Transaction created with ID:", result.rows[0].transaction_id);
             return result.rows[0].transaction_id as string;
         } catch (err) {
             throw err;

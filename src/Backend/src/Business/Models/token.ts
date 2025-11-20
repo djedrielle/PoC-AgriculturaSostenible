@@ -4,7 +4,6 @@
  */
 
 export abstract class Token {
-    token_id: string;
     token_name: string;
     emition_date: string;
     token_price_USD: number;
@@ -12,15 +11,16 @@ export abstract class Token {
     owner_id: string;
     production_id: string;
     abstract unidad(): string;
+    token_id?: string;
 
-    constructor(token_id: string, token_name: string, emition_date: string, token_price_USD: number, amount_tokens: number, owner_id: string, production_id: string) {
-        this.token_id = token_id;
+    constructor(token_name: string, emition_date: string, token_price_USD: number, amount_tokens: number, owner_id: string, production_id: string, token_id?: string) {
         this.token_name = token_name;
         this.emition_date = emition_date;
         this.token_price_USD = token_price_USD;
         this.amount_tokens = amount_tokens;
         this.owner_id = owner_id;
         this.production_id = production_id;
+        this.token_id = token_id || undefined;
     }
 }
 
@@ -44,14 +44,14 @@ export class TokenFactory {
      * - type: identifica la subclase a crear
      * - los siguientes parámetros son los comunes a todos los tokens
      */
-    static create(type: TokenType, token_id: string, token_name: string, emition_date: string, token_price_USD: number, amount_tokens: number, on_market: boolean, owner_id: string, production_id: string): Token {
+    static create(type: TokenType, token_name: string, emition_date: string, token_price_USD: number, amount_tokens: number, owner_id: string, production_id: string, token_id?: string): Token {
         switch (type) {
             case 'cafe':
-                return new CafeToken(token_id, token_name, emition_date, token_price_USD, amount_tokens, owner_id, production_id);
+                return new CafeToken(token_name, emition_date, token_price_USD, amount_tokens, owner_id, production_id, token_id);
             case 'pina':
-                return new PinaToken(token_id, token_name, emition_date, token_price_USD, amount_tokens, owner_id, production_id);
+                return new PinaToken(token_name, emition_date, token_price_USD, amount_tokens, owner_id, production_id, token_id);
             case 'banano':
-                return new BananoToken(token_id, token_name, emition_date, token_price_USD, amount_tokens, owner_id, production_id);
+                return new BananoToken(token_name, emition_date, token_price_USD, amount_tokens, owner_id, production_id, token_id);
             default:
                 throw new Error(`Tipo de token desconocido: ${type}`);
         }

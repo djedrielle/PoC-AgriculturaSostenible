@@ -1,5 +1,4 @@
 export class Production {
-    production_id: string;
     location: string;
     farmer_id: string;
     crop_type: string;
@@ -12,9 +11,9 @@ export class Production {
     agro_protocols: string;
     active: boolean;
     contract_id?: string;
+    production_id?: string;
 
-    constructor(location: string, farmer_id: string, crop_type: string, crop_variety: string, est_harvest_date: string, amount: number, measure_unit: string, biologic_features: string, agro_conditions: string, agro_protocols: string, active: boolean, contract_id?: string) {
-        this.production_id = '';
+    constructor(location: string, farmer_id: string, crop_type: string, crop_variety: string, est_harvest_date: string, amount: number, measure_unit: string, biologic_features: string, agro_conditions: string, agro_protocols: string, active: boolean, contract_id?: string, production_id?: string) {
         this.location = location;
         this.farmer_id = farmer_id;
         this.crop_type = crop_type;
@@ -26,6 +25,7 @@ export class Production {
         this.agro_conditions = agro_conditions;
         this.agro_protocols = agro_protocols;
         this.active = active;
-        this.contract_id = contract_id;
+        this.contract_id = contract_id || undefined;
+        this.production_id = production_id || undefined;
     }
 }

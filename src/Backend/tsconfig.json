@@ -12,6 +12,6 @@
     "resolveJsonModule": true,
     "allowSyntheticDefaultImports": true
   },
-  "include": ["src"],                      // Compila todo lo que esté dentro de /src
+  "include": ["src", "test", "jest.config.js"],                      // Compila todo lo que esté dentro de /src
   "exclude": ["node_modules", "dist"]      // Evita recompilar dependencias o salida
 }

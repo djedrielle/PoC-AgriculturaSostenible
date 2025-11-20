@@ -10,7 +10,7 @@ class TransactionService {
     }
 
     async createTransaction(transaction: Transaction): Promise<string> {
-        this.transactionRepo.createTransaction(transaction);
+        return this.transactionRepo.createTransaction(transaction);
     }
 }
 

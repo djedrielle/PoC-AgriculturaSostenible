@@ -1,5 +1,4 @@
 import express from 'express';
-//import { connectDB } from './Persistence/clients/db';
 
 import { router as analyticsRoutes } from './Business/Routes/analyticsRoutes';
 import { router as marketRoutes } from './Business/Routes/marketRoutes';
