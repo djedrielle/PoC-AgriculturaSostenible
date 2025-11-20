@@ -1,4 +1,3 @@
-
 services:
   backend:
     build:
@@ -15,6 +14,21 @@ services:
       - DATABASE_URL=postgresql://postgres:example@db:5432/postgres
     depends_on:
       - db
+
+  frontend:
+    build:
+      context: ../Presentation-AS-PoC
+      target: development
+    container_name: frontend-service
+    ports:
+      - "8080:8080"  # Cambiado a 8080
+    volumes:
+      - ../Presentation-AS-PoC:/app
+      - /app/node_modules
+    environment:
+      - VITE_API_URL=http://localhost:4000
+    depends_on:
+      - backend
 
   db:
     image: supabase/postgres:17.6.1.038
