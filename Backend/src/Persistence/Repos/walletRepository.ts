@@ -33,7 +33,7 @@ export class WalletRepositoryPostgres implements WalletRepository {
 
             console.log("Checked if token exists in wallet:", exists.rowCount);
 
-            if (exists.rowCount > 0) {
+            if ((exists.rowCount || 0) > 0) {
                 // 2. Si existe, sumar la cantidad de tokens
                 await db.query(
                     `UPDATE wallet 
@@ -44,7 +44,7 @@ export class WalletRepositoryPostgres implements WalletRepository {
                 );
 
                 return true;
-            } 
+            }
 
             // 3. Si no existe, insertar un nuevo registro tomando production_id desde Token
             const insertResult = await db.query(
@@ -67,7 +67,7 @@ export class WalletRepositoryPostgres implements WalletRepository {
                 [amount, buyer_id, token_name, token_unit_price]
             );
 
-            if (insertResult.rowCount === 0) {
+            if ((insertResult.rowCount || 0) === 0) {
                 throw new Error('Token no encontrado en la tabla token');
             }
             console.log("Inserted new token into wallet:", insertResult.rows[0].token_name);

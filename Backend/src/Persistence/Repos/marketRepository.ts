@@ -73,10 +73,9 @@ export class MarketRepositoryPostgres implements MarketRepository {
     async addTokensToMarket(user_id: string, token_name: string, amount: number, token_unit_price: number): Promise<boolean> {
         try {
             const checkResult = await db.query(
-            `SELECT * FROM market WHERE token_owner_id = $1 AND token_name = $2`,
-            [user_id, token_name]
+                `SELECT * FROM market WHERE token_owner_id = $1 AND token_name = $2`,
+                [user_id, token_name]
             );
-
             if (checkResult.rows.length > 0) {
                 await db.query(
                     `UPDATE market SET amount_tokens_on_market = amount_tokens_on_market + $1, current_token_price_usd = $2 WHERE token_owner_id = $3 AND token_name = $4`,
@@ -87,8 +86,8 @@ export class MarketRepositoryPostgres implements MarketRepository {
                 await db.query(
                     `INSERT INTO market (token_name, amount_tokens_on_market, token_owner_id, current_token_price_usd) VALUES ($1, $2, $3, $4)`,
                     [token_name, amount, user_id, token_unit_price]
-                    );
-                    console.log("New tokens added to market:", token_name, token_unit_price);
+                );
+                console.log("New tokens added to market:", token_name, token_unit_price);
             }
             return true;
         } catch (err) {

@@ -6,7 +6,7 @@ export class UserController {
     userService = new UserService();
     // Crear usuario
     async createUser(req: Request, res: Response) {
-        
+
         try {
             const userData = req.body;
 
@@ -26,27 +26,27 @@ export class UserController {
             const createdUserId = await this.userService.createUser(userObj);
 
             // Si el usuario es farmer o investor, crear también el objeto correspondiente.
-            let roleDoc = null;
-            try {
-                if (userData.user_type === 'farmer') {
-                    const farmer = new Farmer({
-                        user_id: createdUserId,
-                        location: userData.farmerData?.location || ''
-                    });
-                    roleDoc = await this.userService.createFarmer(farmer);
-                } else if (userData.user_type === 'investor') {
-                    const investor = new Investor({
-                        user_id: createdUserId
-                    });
-                    roleDoc = await this.userService.createInvestor(investor);
-                }
-            
-            } catch (roleErr) {
-                console.error('Error cleaning up user after role creation failure:', roleErr);
-            }
+            // let roleDoc = null;
+            // try {
+            //     if (userData.user_type === 'farmer') {
+            //         const farmer = new Farmer({
+            //             user_id: createdUserId,
+            //             location: userData.farmerData?.location || ''
+            //         });
+            //         roleDoc = await this.userService.createFarmer(farmer);
+            //     } else if (userData.user_type === 'investor') {
+            //         const investor = new Investor({
+            //             user_id: createdUserId
+            //         });
+            //         roleDoc = await this.userService.createInvestor(investor);
+            //     }
+
+            // } catch (roleErr) {
+            //     console.error('Error cleaning up user after role creation failure:', roleErr);
+            // }
 
             // Responder con el usuario creado y, si aplica, el documento de rol creado
-            return res.status(201).json({ user_id: createdUserId, roleData: roleDoc });
+            return res.status(201).json({ user_id: createdUserId });
         } catch (err: any) {
             console.error('UserController.create:', err);
             return res.status(500).json({ message: err?.message ?? 'Error interno del servidor' });
