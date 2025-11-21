@@ -1,122 +1,132 @@
 import { SketchCard } from "@/components/SketchCard";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Wallet as WalletIcon, TrendingUp, TrendingDown } from "lucide-react";
+import { ArrowUpRight, ArrowDownLeft, Wallet as WalletIcon } from "lucide-react";
+import { useState, useEffect } from "react";
+import { getWalletTokens } from "@/api";
+import { useToast } from "@/hooks/use-toast";
 
-const myTokens = [
-  { 
-    id: 1, 
-    name: "Coffee Token A", 
-    purchasePrice: 2.30, 
-    currentPrice: 2.45,
-    amount: 100, 
-    previousOwner: "Farm #156" 
-  },
-  { 
-    id: 2, 
-    name: "Wheat Token C", 
-    purchasePrice: 3.50, 
-    currentPrice: 3.20,
-    amount: 50, 
-    previousOwner: "Farm #087" 
-  },
-];
+export default function Wallet() {
+  const [walletTokens, setWalletTokens] = useState<any[]>([]);
+  const { toast } = useToast();
 
-export default function WalletPage() {
-  const totalValue = myTokens.reduce((sum, token) => sum + (token.currentPrice * token.amount), 0);
-  const totalInvested = myTokens.reduce((sum, token) => sum + (token.purchasePrice * token.amount), 0);
-  const profit = totalValue - totalInvested;
-  const profitPercentage = ((profit / totalInvested) * 100).toFixed(2);
+  useEffect(() => {
+    fetchWallet();
+  }, []);
+
+  const fetchWallet = async () => {
+    try {
+      const tokens = await getWalletTokens({ user_id: 1 }); // TODO: Real user ID
+      setWalletTokens(tokens);
+    } catch (error) {
+      console.error("Error fetching wallet tokens:", error);
+      toast({
+        title: "Error",
+        description: "No se pudieron cargar los tokens de la billetera",
+        variant: "destructive",
+      });
+    }
+  };
+
+  const totalValue = walletTokens.reduce((acc, token) => {
+    return acc + (parseFloat(token.amount_tokens_on_wallet) * parseFloat(token.token_price_usd));
+  }, 0);
 
   return (
-    <div className="max-w-6xl mx-auto space-y-6">
+    <div className="max-w-4xl mx-auto space-y-6">
       <h1 className="text-3xl font-bold text-foreground">My Wallet</h1>
-      
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-        <SketchCard title="Total Portfolio Value">
-          <div className="text-3xl font-bold text-primary flex items-center gap-2">
-            <WalletIcon className="w-8 h-8" />
-            ${totalValue.toFixed(2)}
-          </div>
-        </SketchCard>
 
-        <SketchCard title="Total Invested">
-          <div className="text-3xl font-bold text-secondary">
-            ${totalInvested.toFixed(2)}
-          </div>
-        </SketchCard>
-
-        <SketchCard title="Profit/Loss">
-          <div className={`text-3xl font-bold flex items-center gap-2 ${profit >= 0 ? 'text-primary' : 'text-destructive'}`}>
-            {profit >= 0 ? <TrendingUp className="w-8 h-8" /> : <TrendingDown className="w-8 h-8" />}
-            ${Math.abs(profit).toFixed(2)}
-          </div>
-          <p className="text-sm text-muted-foreground mt-2">
-            {profit >= 0 ? '+' : ''}{profitPercentage}%
-          </p>
-        </SketchCard>
-      </div>
-
-      <SketchCard 
-        title="My Holdings" 
-        serviceFile="walletService.ts, tokenService.ts"
-      >
-        <div className="space-y-4">
-          {myTokens.map((token) => {
-            const tokenProfit = (token.currentPrice - token.purchasePrice) * token.amount;
-            const tokenProfitPercent = ((tokenProfit / (token.purchasePrice * token.amount)) * 100).toFixed(2);
-            
-            return (
-              <div 
-                key={token.id}
-                className="p-4 bg-card rounded-lg border-2 border-border space-y-4"
-              >
-                <div className="flex items-start justify-between">
-                  <div>
-                    <p className="font-semibold text-lg">{token.name}</p>
-                    <p className="text-sm text-muted-foreground">
-                      Previous Owner: {token.previousOwner}
-                    </p>
-                  </div>
-                  <div className="text-right">
-                    <p className="text-sm text-muted-foreground">Holdings</p>
-                    <p className="font-bold">{token.amount} tokens</p>
-                  </div>
+      <div className="grid md:grid-cols-3 gap-6">
+        <div className="md:col-span-2 space-y-6">
+          <SketchCard
+            title="Portfolio Overview"
+            serviceFile="walletService.ts"
+          >
+            <div className="space-y-6">
+              <div className="flex items-center gap-4 p-4 bg-primary/10 rounded-lg border border-primary/20">
+                <div className="p-3 bg-primary text-primary-foreground rounded-full">
+                  <WalletIcon className="w-6 h-6" />
                 </div>
-
-                <div className="grid grid-cols-3 gap-4 p-3 bg-background rounded border border-border">
-                  <div>
-                    <p className="text-xs text-muted-foreground">Purchase Price</p>
-                    <p className="font-medium">${token.purchasePrice}</p>
-                  </div>
-                  <div>
-                    <p className="text-xs text-muted-foreground">Current Price</p>
-                    <p className="font-medium text-primary">${token.currentPrice}</p>
-                  </div>
-                  <div>
-                    <p className="text-xs text-muted-foreground">Profit/Loss</p>
-                    <p className={`font-medium ${tokenProfit >= 0 ? 'text-primary' : 'text-destructive'}`}>
-                      {tokenProfit >= 0 ? '+' : ''}${tokenProfit.toFixed(2)} ({tokenProfitPercent}%)
-                    </p>
-                  </div>
-                </div>
-
-                <div className="flex gap-3">
-                  <div className="flex-1 space-y-2">
-                    <Input type="number" placeholder="Amount to sell" max={token.amount} />
-                  </div>
-                  <Button variant="outline" className="whitespace-nowrap">
-                    Sell Tokens
-                  </Button>
-                  <Button className="bg-secondary text-secondary-foreground hover:bg-secondary/90 whitespace-nowrap">
-                    Set on Market
-                  </Button>
+                <div>
+                  <p className="text-sm text-muted-foreground">Total Balance</p>
+                  <p className="text-3xl font-bold text-primary">${totalValue.toFixed(2)}</p>
                 </div>
               </div>
-            );
-          })}
+
+              <div>
+                <h3 className="font-semibold mb-4">Your Tokens</h3>
+                <div className="space-y-3">
+                  {walletTokens.length === 0 ? (
+                    <p className="text-center text-muted-foreground py-4">No tokens in wallet</p>
+                  ) : (
+                    walletTokens.map((token) => (
+                      <div
+                        key={token.token_name}
+                        className="flex items-center justify-between p-4 bg-card rounded-lg border border-border"
+                      >
+                        <div>
+                          <p className="font-medium">{token.token_name}</p>
+                          <p className="text-sm text-muted-foreground">{token.amount_tokens_on_wallet} tokens</p>
+                        </div>
+                        <div className="text-right">
+                          <p className="font-bold">${(parseFloat(token.amount_tokens_on_wallet) * parseFloat(token.token_price_usd)).toFixed(2)}</p>
+                          <p className="text-xs text-muted-foreground">${token.token_price_usd}/token</p>
+                        </div>
+                      </div>
+                    ))
+                  )}
+                </div>
+              </div>
+            </div>
+          </SketchCard>
         </div>
-      </SketchCard>
+
+        <div className="space-y-6">
+          <SketchCard
+            title="Quick Actions"
+            serviceFile="tokenService.ts"
+          >
+            <div className="space-y-3">
+              <Button className="w-full justify-start" variant="outline">
+                <ArrowUpRight className="w-4 h-4 mr-2 text-green-600" />
+                Deposit Funds
+              </Button>
+              <Button className="w-full justify-start" variant="outline">
+                <ArrowDownLeft className="w-4 h-4 mr-2 text-red-600" />
+                Withdraw Funds
+              </Button>
+            </div>
+          </SketchCard>
+
+          <SketchCard
+            title="Recent Activity"
+            serviceFile="transactionService.ts"
+          >
+            <div className="space-y-4">
+              <div className="flex items-center gap-3 text-sm">
+                <div className="w-8 h-8 rounded-full bg-green-100 flex items-center justify-center text-green-600">
+                  <ArrowDownLeft className="w-4 h-4" />
+                </div>
+                <div className="flex-1">
+                  <p className="font-medium">Bought Coffee Token A</p>
+                  <p className="text-xs text-muted-foreground">Today, 10:23 AM</p>
+                </div>
+                <p className="font-medium text-red-600">-$245.00</p>
+              </div>
+
+              <div className="flex items-center gap-3 text-sm">
+                <div className="w-8 h-8 rounded-full bg-blue-100 flex items-center justify-center text-blue-600">
+                  <ArrowUpRight className="w-4 h-4" />
+                </div>
+                <div className="flex-1">
+                  <p className="font-medium">Deposit</p>
+                  <p className="text-xs text-muted-foreground">Yesterday</p>
+                </div>
+                <p className="font-medium text-green-600">+$1,000.00</p>
+              </div>
+            </div>
+          </SketchCard>
+        </div>
+      </div>
     </div>
   );
 }

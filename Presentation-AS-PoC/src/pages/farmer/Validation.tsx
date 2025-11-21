@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { SketchCard } from "@/components/SketchCard";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -7,19 +7,37 @@ import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Calendar, User, FileCheck } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
+import { affiliate, certificateInfo } from "@/api";
 
 export default function Validation() {
   const [isAffiliated, setIsAffiliated] = useState(false);
   const [institution, setInstitution] = useState("");
   const [tokenName, setTokenName] = useState("");
   const { toast } = useToast();
+  const [certData, setCertData] = useState<any>(null);
 
   const certificates = [
     { id: 1, date: "2024-01-15", status: "Active", agent: "Dr. Maria Lopez" },
     { id: 2, date: "2023-06-20", status: "Expired", agent: "Dr. Juan Martinez" },
   ];
 
-  const handleAffiliate = () => {
+  useEffect(() => {
+    // Check if user has certificate info on mount
+    const fetchCertInfo = async () => {
+      try {
+        const info = await certificateInfo({ user_id: "1" }); // TODO: Real user ID
+        if (info && info.certificate_id) {
+          setIsAffiliated(true);
+          setCertData(info);
+        }
+      } catch (error) {
+        console.log("No certificate info found or error fetching");
+      }
+    };
+    fetchCertInfo();
+  }, []);
+
+  const handleAffiliate = async () => {
     if (!institution || !tokenName) {
       toast({
         title: "Error",
@@ -29,19 +47,32 @@ export default function Validation() {
       return;
     }
 
-    setIsAffiliated(true);
-    toast({
-      title: "Afiliación exitosa",
-      description: `Te has afiliado a ${institution}`,
-    });
+    try {
+      await affiliate({
+        user_id: "1", // TODO: Real user ID
+        institution_id: "1" // TODO: Map institution name to ID properly
+      });
+
+      setIsAffiliated(true);
+      toast({
+        title: "Afiliación exitosa",
+        description: `Te has afiliado a ${institution}`,
+      });
+    } catch (err: any) {
+      toast({
+        title: "Error",
+        description: err.message || "Error al afiliarse",
+        variant: "destructive",
+      });
+    }
   };
 
   if (!isAffiliated) {
     return (
       <div className="max-w-4xl mx-auto space-y-6">
         <h1 className="text-3xl font-bold text-foreground">Validation Info</h1>
-        
-        <SketchCard 
+
+        <SketchCard
           title="Affiliate To An Institution"
           serviceFile="validationService.ts"
         >
@@ -70,7 +101,7 @@ export default function Validation() {
               />
             </div>
 
-            <Button 
+            <Button
               onClick={handleAffiliate}
               className="w-full bg-primary text-primary-foreground hover:bg-primary/90"
             >
@@ -89,29 +120,29 @@ export default function Validation() {
   return (
     <div className="max-w-4xl mx-auto space-y-6">
       <h1 className="text-3xl font-bold text-foreground">Validation Information</h1>
-      
-      <SketchCard 
-        title="Instituto Interamericano de Cooperación para la Agricultura"
+
+      <SketchCard
+        title={certData?.institution_name || "Instituto Interamericano de Cooperación para la Agricultura"}
         serviceFile="validationService.ts"
       >
         <div className="space-y-6">
           <div className="grid grid-cols-2 gap-4 p-4 bg-card rounded-lg border border-border">
             <div className="space-y-1">
               <p className="text-sm text-muted-foreground">Affiliation Info</p>
-              <p className="font-medium">Member #AG-2024-0156</p>
+              <p className="font-medium">Member #{certData?.certificate_id || "AG-2024-0156"}</p>
             </div>
             <div className="space-y-1">
               <p className="text-sm text-muted-foreground">Issue Date</p>
               <p className="font-medium flex items-center gap-2">
                 <Calendar className="w-4 h-4" />
-                Jan 15, 2024
+                {certData?.emition_date ? new Date(certData.emition_date).toLocaleDateString() : "Jan 15, 2024"}
               </p>
             </div>
             <div className="space-y-1">
               <p className="text-sm text-muted-foreground">Exp. Date</p>
               <p className="font-medium flex items-center gap-2">
                 <Calendar className="w-4 h-4" />
-                Jan 15, 2026
+                {certData?.exp_date ? new Date(certData.exp_date).toLocaleDateString() : "Jan 15, 2026"}
               </p>
             </div>
             <div className="space-y-1">
@@ -130,7 +161,7 @@ export default function Validation() {
             </h4>
             <div className="space-y-2">
               {certificates.map((cert) => (
-                <div 
+                <div
                   key={cert.id}
                   className="flex items-center justify-between p-3 bg-card rounded border border-border"
                 >

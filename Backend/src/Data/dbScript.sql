@@ -17,7 +17,7 @@ CREATE TABLE Smart_Contract (
     initial_token_price_USD NUMERIC,
     total_tokens NUMERIC,
     emition_date TIMESTAMP,
-    contract_date VARCHAR
+    contract_state VARCHAR
 );
 
 CREATE TABLE Production (
@@ -76,6 +76,7 @@ CREATE TABLE Validation_Certificate (
     user_id INTEGER REFERENCES "User"(user_id)
 );
 
+
 CREATE TABLE Oracle_Data (
     data_id SERIAL PRIMARY KEY,
     data_title VARCHAR,
@@ -85,15 +86,17 @@ CREATE TABLE Oracle_Data (
     verified BOOLEAN
 );
 
+
 CREATE TABLE Market (
-    token_name INTEGER PRIMARY KEY REFERENCES Token(token_id),
+    token_name VARCHAR PRIMARY KEY REFERENCES Token(token_name),
     current_token_price_USD NUMERIC,
     amount_tokens_on_market NUMERIC,
     token_owner_id INTEGER REFERENCES "User"(user_id)
 );
 
+
 CREATE TABLE Wallet (
-    token_name INTEGER PRIMARY KEY REFERENCES Token(token_id),
+    token_name VARCHAR PRIMARY KEY REFERENCES Token(token_name),
     token_price_USD NUMERIC,
     amount_tokens_on_wallet NUMERIC,
     production_id INTEGER REFERENCES Production(production_id),
