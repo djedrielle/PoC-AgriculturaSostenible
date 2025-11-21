@@ -8,6 +8,7 @@ export interface SmartContractRepository {
 export class SmartContractRepositoryPostgres implements SmartContractRepository {
   async createSmartContract(sContract: SmartContract): Promise<string> {
     try {
+        console.log(sContract);
         const result = await db.query(
             `INSERT INTO smart_contract (contract_address, token_standard_used, initial_token_price_USD, total_tokens, emition_date, contract_state) 
              VALUES ($1, $2, $3, $4, $5, $6) 
