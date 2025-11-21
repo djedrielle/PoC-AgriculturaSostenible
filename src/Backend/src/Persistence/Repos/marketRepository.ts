@@ -14,8 +14,8 @@ export class MarketRepositoryPostgres implements MarketRepository {
     async publishOnMarket(token: Token): Promise<string> {
         try {
             const result = await db.query(
-                `INSERT INTO market (token_name, current_token_price_USD, amount_tokens_on_market, owner_id)
-                VALUES ($1, $2, $3, $4)`,
+                `INSERT INTO market (token_name, current_token_price_usd, amount_tokens_on_market, token_owner_id)
+                VALUES ($1, $2, $3, $4) RETURNING market_id`,
                 [
                     token.token_name,
                     token.token_price_USD,

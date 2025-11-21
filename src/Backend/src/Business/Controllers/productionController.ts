@@ -18,14 +18,14 @@ export class ProductionController {
         // Crear un contrato inteligente para la tokenización del activo agrícola
         const smartContractData = req.body.smart_contract_data;
         const smartContractObj = new SmartContract(
-            smartContractData.contract_id,
             smartContractData.contract_address,
             smartContractData.standard_implemented,
             smartContractData.initial_token_price,
             smartContractData.total_tokens,
-            smartContractData.emition_date,
             smartContractData.active,
-            smartContractData.contract_state
+            smartContractData.contract_state,
+            smartContractData.emition_date,
+            
         );
         const contractId = await this.smartContractService.addSmartContract(smartContractObj);
         // Crear un objeto de producción a partir de los datos recibidos, y el contract_id retornado
