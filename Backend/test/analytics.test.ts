@@ -71,7 +71,7 @@ describe('Analytics Endpoints', () => {
         totalSupply: 1000,
         priceHistory: expect.arrayContaining([
           expect.objectContaining({
-            timestamp: expect.any(Date),
+            timestamp: expect.any(String),
             price: expect.any(Number)
           })
         ])

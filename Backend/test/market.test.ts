@@ -54,7 +54,14 @@ describe('Market Endpoints', () => {
       // Assert
       expect(response.status).toBe(200);
       expect(response.body).toHaveLength(2);
-      expect(response.body).toEqual(mockTokens);
+
+      // Verify response body matches mockTokens but without functions
+      const expectedBody = mockTokens.map(token => {
+        const { unidad, ...rest } = token;
+        return rest;
+      });
+
+      expect(response.body).toEqual(expectedBody);
       expect(mockGetAllTokensOnMarket).toHaveBeenCalledTimes(1);
     });
 

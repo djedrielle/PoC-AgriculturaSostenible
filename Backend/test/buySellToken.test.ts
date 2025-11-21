@@ -2,13 +2,17 @@
 const mockBuyTokens = jest.fn();
 const mockSellTokens = jest.fn();
 
-jest.mock('../src/Business/Services/tokenService', () => ({
-  __esModule: true,
-  default: jest.fn().mockImplementation(() => ({
+jest.mock('../src/Business/Services/tokenService', () => {
+  const mockImpl = jest.fn().mockImplementation(() => ({
     buyTokens: mockBuyTokens,
     sellTokens: mockSellTokens
-  }))
-}));
+  }));
+  return {
+    __esModule: true,
+    default: mockImpl,
+    TokenService: mockImpl
+  };
+});
 
 // Importar después de mockear
 import request from 'supertest';

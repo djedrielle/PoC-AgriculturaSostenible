@@ -91,7 +91,14 @@ describe('Wallet Endpoints', () => {
 
       // Assert
       expect(response.status).toBe(200);
-      expect(response.body).toEqual(mockTokens);
+
+      // Verify response body matches mockTokens but without functions (JSON serialization)
+      const expectedBody = mockTokens.map(token => {
+        const { unidad, ...rest } = token;
+        return rest;
+      });
+
+      expect(response.body).toEqual(expectedBody);
       expect(mockGetUserTokens).toHaveBeenCalledWith('user-123');
       expect(response.body).toHaveLength(2);
     });

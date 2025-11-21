@@ -17,13 +17,16 @@ jest.mock('../src/Business/Services/productionService', () => ({
   }))
 }));
 
-jest.mock('../src/Business/Services/tokenService', () => ({
-  __esModule: true,
-  default: jest.fn().mockImplementation(() => ({
+jest.mock('../src/Business/Services/tokenService', () => {
+  const mockImpl = jest.fn().mockImplementation(() => ({
     createTokens: mockCreateTokens
-  })),
-  TokenService: jest.fn()
-}));
+  }));
+  return {
+    __esModule: true,
+    default: mockImpl,
+    TokenService: mockImpl
+  };
+});
 
 // Importar después de mockear
 import request from 'supertest';
