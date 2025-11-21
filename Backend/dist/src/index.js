@@ -12,6 +12,7 @@ const processValidationRoutes_1 = require("./Business/Routes/processValidationRo
 const tokenRoutes_1 = require("./Business/Routes/tokenRoutes");
 const userRoutes_1 = require("./Business/Routes/userRoutes");
 const walletRoutes_1 = require("./Business/Routes/walletRoutes");
+const localSupabase_1 = require("./Persistence/localSupabase");
 const app = (0, express_1.default)();
 exports.app = app;
 app.use((0, cors_1.default)());
@@ -31,7 +32,7 @@ app.use('/token', tokenRoutes_1.router);
 app.use('/user', userRoutes_1.router);
 app.use('/wallet', walletRoutes_1.router);
 // Iniciar conexión a la base de datos
-//connectDB();
+(0, localSupabase_1.connectDB)();
 // Puerto configurable
 const PORT = process.env.PORT || 4000;
 if (require.main === module) {

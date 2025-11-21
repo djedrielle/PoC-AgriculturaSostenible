@@ -33,9 +33,6 @@ app.use('/wallet', walletRoutes);
 
 export { app };
 
-// Iniciar conexión a la base de datos
-//connectDB();
-
 // Puerto configurable
 const PORT = process.env.PORT || 4000;
 
