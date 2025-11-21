@@ -5,6 +5,9 @@ import { Label } from "@/components/ui/label";
 import { Upload, FileCheck } from "lucide-react";
 import { useState } from "react";
 import { useToast } from "@/hooks/use-toast";
+import { requestCertificate } from "@/api";
+import { RequestCertificateSection } from "@/pages/farmer/RequestCertificate";
+
 
 export default function Tokenize() {
   const [hasCertificate, setHasCertificate] = useState(false);
@@ -21,11 +24,27 @@ export default function Tokenize() {
     }
   };
 
-  const handleRequestCertificate = () => {
-    toast({
-      title: "Solicitud enviada",
-      description: "Tu solicitud de certificado ha sido enviada.",
-    });
+  const handleRequestCertificate = async () => {
+    try {
+      const response = await requestCertificate({
+        user_id: "123",          
+        institution_id: "456"    
+      });
+
+      toast({
+        title: "Solicitud enviada",
+        description: "El backend respondió correctamente.",
+      });
+
+      console.log("RESPONSE:", response);
+
+    } catch (err: any) {
+      toast({
+        title: "Error",
+        description: err.message || "No se pudo enviar la solicitud",
+        variant: "destructive",
+      });
+    }
   };
 
   return (

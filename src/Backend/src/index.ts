@@ -1,4 +1,5 @@
 import express from 'express';
+import cors from 'cors';
 
 import { router as analyticsRoutes } from './Business/Routes/analyticsRoutes';
 import { router as marketRoutes } from './Business/Routes/marketRoutes';
@@ -8,6 +9,15 @@ import { router as userRoutes } from './Business/Routes/userRoutes';
 import { router as walletRoutes } from './Business/Routes/walletRoutes';
 
 const app = express();
+
+app.use(cors());
+app.use(express.json());
+
+// logger
+app.use((req, _res, next) => {
+  console.log(`[REQ] ${req.method} ${req.path}`, req.body);
+  next();
+});
 
 // Middleware base
 app.use(express.json());
