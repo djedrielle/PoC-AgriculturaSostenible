@@ -55,7 +55,7 @@ CREATE TABLE Transaction (
     transaction_date TIMESTAMP,
     token_name VARCHAR REFERENCES Token(token_name),
     buyer_id INTEGER REFERENCES "User"(user_id),
-    editor_id INTEGER REFERENCES "User"(user_id)
+    seller_id INTEGER REFERENCES "User"(user_id)
 );
 
 CREATE TABLE Validation_Institution (

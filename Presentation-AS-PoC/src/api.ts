@@ -114,3 +114,9 @@ export function getMarketTokens() {
 export function getWalletTokens(payload: { user_id: number }) {
   return post("/wallet/walletTokens", payload);
 }
+
+// ====== TRANSACTION ENDPOINTS ======
+
+export function getRecentTransactions(payload: { user_id: number }) {
+  return post("/transaction/recent", payload);
+}

@@ -54,6 +54,7 @@ export default function Validation() {
       });
 
       setIsAffiliated(true);
+      localStorage.setItem('farmerTokenName', tokenName);
       toast({
         title: "Afiliación exitosa",
         description: `Te has afiliado a ${institution}`,

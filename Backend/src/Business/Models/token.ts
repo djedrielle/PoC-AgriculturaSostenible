@@ -36,7 +36,11 @@ export class BananoToken extends Token {
     unidad(): string { return 'racimos'; }
 }
 
-export type TokenType = 'cafe' | 'pina' | 'banano';
+export class GenericToken extends Token {
+    unidad(): string { return 'unidades'; }
+}
+
+export type TokenType = 'cafe' | 'pina' | 'banano' | string;
 
 export class TokenFactory {
     /**
@@ -45,7 +49,7 @@ export class TokenFactory {
      * - los siguientes parámetros son los comunes a todos los tokens
      */
     static create(type: TokenType, token_name: string, emition_date: string, token_price_USD: number, amount_tokens: number, owner_id: string, production_id: string, token_id?: string): Token {
-        switch (type) {
+        switch (type.toLowerCase()) {
             case 'cafe':
                 return new CafeToken(token_name, emition_date, token_price_USD, amount_tokens, owner_id, production_id, token_id);
             case 'pina':
@@ -53,7 +57,7 @@ export class TokenFactory {
             case 'banano':
                 return new BananoToken(token_name, emition_date, token_price_USD, amount_tokens, owner_id, production_id, token_id);
             default:
-                throw new Error(`Tipo de token desconocido: ${type}`);
+                return new GenericToken(token_name, emition_date, token_price_USD, amount_tokens, owner_id, production_id, token_id);
         }
     }
 }

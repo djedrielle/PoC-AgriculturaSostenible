@@ -12,7 +12,7 @@ export class WalletRepositoryPostgres implements WalletRepository {
     async getUserTokens(user_id: string): Promise<Token[]> {
         try {
             const result = await db.query(
-                `SELECT * FROM wallet WHERE user_id = $1`,
+                `SELECT * FROM wallet WHERE wallet_owner_id = $1`,
                 [user_id]
             );
             return result.rows as Token[];

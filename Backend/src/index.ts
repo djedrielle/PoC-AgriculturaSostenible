@@ -7,6 +7,7 @@ import { router as validationRoutes } from './Business/Routes/processValidationR
 import { router as tokenRoutes } from './Business/Routes/tokenRoutes';
 import { router as userRoutes } from './Business/Routes/userRoutes';
 import { router as walletRoutes } from './Business/Routes/walletRoutes';
+import transactionRoutes from './Business/Routes/transactionRoutes';
 
 const app = express();
 
@@ -29,6 +30,7 @@ app.use('/validation', validationRoutes);
 app.use('/token', tokenRoutes);
 app.use('/user', userRoutes);
 app.use('/wallet', walletRoutes);
+app.use('/transaction', transactionRoutes);
 
 
 export { app };

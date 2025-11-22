@@ -4,6 +4,7 @@ import db from '../localSupabase';
 export interface TransactionRepository {
     createTransaction(transaction: Transaction): Promise<string>;
     getTransactionPriceAndDateByTokenId(tokenId: string): Promise<{ price: number; date: string } | null>;
+    getRecentTransactions(userId: number): Promise<Transaction[]>;
 }
 
 export class TransactionRepositoryPostgres implements TransactionRepository {
@@ -54,6 +55,21 @@ export class TransactionRepositoryPostgres implements TransactionRepository {
                 price: result.rows[0].token_unit_price,
                 date: result.rows[0].transaction_date
             };
+        } catch (err) {
+            throw err;
+        }
+    }
+
+    async getRecentTransactions(userId: number): Promise<Transaction[]> {
+        try {
+            const result = await db.query(
+                `SELECT * FROM transaction 
+                WHERE buyer_id = $1 OR seller_id = $1 
+                ORDER BY transaction_date DESC 
+                LIMIT 2`,
+                [userId]
+            );
+            return result.rows;
         } catch (err) {
             throw err;
         }

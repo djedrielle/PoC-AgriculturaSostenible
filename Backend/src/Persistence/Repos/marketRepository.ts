@@ -15,7 +15,7 @@ export class MarketRepositoryPostgres implements MarketRepository {
         try {
             const result = await db.query(
                 `INSERT INTO market (token_name, current_token_price_usd, amount_tokens_on_market, token_owner_id)
-                VALUES ($1, $2, $3, $4) RETURNING market_id`,
+                VALUES ($1, $2, $3, $4) RETURNING token_name`,
                 [
                     token.token_name,
                     token.token_price_USD,
@@ -49,9 +49,12 @@ export class MarketRepositoryPostgres implements MarketRepository {
     async getAllTokensOnMarket(): Promise<Token[]> {
         try {
             const result = await db.query(
-                `SELECT * FROM market`
+                `SELECT m.*, p.location, p.crop_type, p.crop_variety, p.est_harvest_date, p.biologic_features, p.agro_conditions, p.agro_protocols 
+                 FROM market m
+                 JOIN token t ON m.token_name = t.token_name
+                 JOIN production p ON t.production_id = p.production_id`
             );
-            return result.rows as Token[];
+            return result.rows as any[];
         } catch (err) {
             throw err;
         }

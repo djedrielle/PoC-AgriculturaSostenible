@@ -115,19 +115,43 @@ export default function Market() {
             serviceFile="productionService.ts"
           >
             {selectedToken ? (
-              <div className="space-y-3 text-sm">
-                <div>
-                  <p className="text-muted-foreground">Token Name</p>
-                  <p className="font-medium">{selectedToken.token_name}</p>
+              <div className="space-y-4 text-sm">
+                <div className="p-3 bg-muted rounded-lg">
+                  <p className="text-sm font-medium text-muted-foreground">Token Details</p>
+                  <p className="text-lg font-bold">{selectedToken.token_name}</p>
+                  <p className="text-primary font-bold">${selectedToken.current_token_price_usd}</p>
                 </div>
-                <div>
-                  <p className="text-muted-foreground">Token Price</p>
-                  <p className="font-medium text-primary">${selectedToken.current_token_price_usd}</p>
+
+                <div className="grid grid-cols-2 gap-4">
+                  <div>
+                    <p className="text-xs text-muted-foreground">Crop</p>
+                    <p className="font-medium">{selectedToken.crop_type} ({selectedToken.crop_variety})</p>
+                  </div>
+                  <div>
+                    <p className="text-xs text-muted-foreground">Location</p>
+                    <p className="font-medium">{selectedToken.location}</p>
+                  </div>
+                  <div>
+                    <p className="text-xs text-muted-foreground">Est. Harvest</p>
+                    <p className="font-medium">{new Date(selectedToken.est_harvest_date).toLocaleDateString()}</p>
+                  </div>
+                  <div>
+                    <p className="text-xs text-muted-foreground">Available</p>
+                    <p className="font-medium">{selectedToken.amount_tokens_on_market}</p>
+                  </div>
                 </div>
-                <div>
-                  <p className="text-muted-foreground">Available</p>
-                  <p className="font-medium">{selectedToken.amount_tokens_on_market} tokens</p>
-                </div>
+
+                {(selectedToken.agro_conditions || selectedToken.agro_protocols) && (
+                  <div className="pt-2 border-t border-border">
+                    <p className="text-xs font-semibold mb-1">Agricultural Info</p>
+                    {selectedToken.agro_conditions && (
+                      <p className="text-xs text-muted-foreground mb-1">Conditions: {selectedToken.agro_conditions}</p>
+                    )}
+                    {selectedToken.agro_protocols && (
+                      <p className="text-xs text-muted-foreground">Protocols: {selectedToken.agro_protocols}</p>
+                    )}
+                  </div>
+                )}
               </div>
             ) : (
               <p className="text-muted-foreground text-center py-8">
